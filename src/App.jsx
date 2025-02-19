@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./App.css"; // Make sure to include this in your project
+import "./App.css";
 
 const MemoryGame = () => {
   const [gridSize, setGridSize] = useState(Number(localStorage.getItem("gridSize")) || 4);
@@ -10,6 +10,7 @@ const MemoryGame = () => {
   const [firstCardIndex, setFirstCardIndex] = useState(null);
   const [lockBoard, setLockBoard] = useState(false);
   const [matchedPairs, setMatchedPairs] = useState(0);
+  const [selectedGridSize, setSelectedGridSize] = useState(gridSize); 
 
   const totalPairs = (gridSize * gridSize) / 2;
 
@@ -44,8 +45,11 @@ const MemoryGame = () => {
   }, []);
 
   const startGame = () => {
+    setGridSize(selectedGridSize); 
+    localStorage.setItem("gridSize", selectedGridSize);
+
     let cardValues = [];
-    for (let i = 0; i < totalPairs; i++) {
+    for (let i = 0; i < (selectedGridSize * selectedGridSize) / 2; i++) {
       const letter = String.fromCharCode(65 + i);
       cardValues.push(letter, letter);
     }
@@ -66,7 +70,6 @@ const MemoryGame = () => {
 
     sessionStorage.setItem("moves", 0);
     sessionStorage.setItem("gameState", JSON.stringify(newCards));
-    localStorage.setItem("gridSize", gridSize);
   };
 
   const flipCard = (index) => {
@@ -119,15 +122,14 @@ const MemoryGame = () => {
   return (
     <div className="gamecontainer">
       <div className="gameplay">
-        <h1 className="title">Game Flip </h1>
-        <p className="rules">Welcome to game flip, the objective is to match the cards in the least amount of time.</p>
+        <h1 className="title">Game Flip</h1>
+        <p className="rules">Welcome to Game Flip! The objective is to match the cards in the least amount of moves.</p>
         <div style={{ marginBottom: "1rem" }}>
           <label>
             Grid Size:
             <select
-              value={gridSize}
-              onChange={(e) => setGridSize(Number(e.target.value))}
-              disabled={cards.length > 0}
+              value={selectedGridSize}
+              onChange={(e) => setSelectedGridSize(Number(e.target.value))}
               style={{ marginLeft: "0.5rem" }}
             >
               <option value={4}>4 x 4</option>
@@ -137,10 +139,12 @@ const MemoryGame = () => {
           </label>
           <button onClick={startGame} style={{ marginLeft: "1rem" }}>Start</button>
         </div>
+      
         <div>
           <span>Moves: {moves}</span>
           <span style={{ marginLeft: "1rem" }}>Total Moves: {totalMoves}</span>
         </div>
+      </div>
         {message && <div id="message">{message}</div>}
         <div className="grid"
           style={{
@@ -159,9 +163,10 @@ const MemoryGame = () => {
             </div>
           ))}
         </div>
-      </div>
+      
     </div>
   );
 };
 
 export default MemoryGame;
+

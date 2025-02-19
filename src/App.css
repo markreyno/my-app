@@ -18,7 +18,10 @@ body {
 .grid {
   display: grid;
   gap: 5px;
+  justify-content: center;
+  
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .grid div {
@@ -30,9 +33,10 @@ body {
 }
 
 .gamecontainer {
-  display: flex;
+  display: grid;
   justify-content: center;
   align-items: center;
+  
 }
 
 #message {
